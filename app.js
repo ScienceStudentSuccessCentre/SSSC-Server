@@ -4,6 +4,8 @@ var express = require('express');
 var request = require('request');
 var app = express();
 
+var ssscdb = require('./ssscdb.js');
+
 const ROOT = "./public";
 
 //receive a port, or select default port
@@ -16,7 +18,7 @@ app.use(function(req, res, next) {
 });
 
 app.get('/events', function(req, res) {
-
+	res.send(ssscdb.getEvents());
 });
 
 //render the home page
@@ -36,11 +38,17 @@ app.all("*", function(req, res) {
 //start listening on the selected port
 app.listen(app.get('port'), function () {
 	console.log('Server listening on port', app.get('port'));
-	ping();
+	cycle();
 	setInterval(() => {
-		ping();
+		cycle();
 	}, 1500000);
 });
+
+//run one scrape cycle on the SSSC website, then ping Heroku
+function cycle() {
+	$.scrape();
+	ping();
+}
 
 //gets around the Heroku (hosting service) limit of 30 minutes of inactivity
 function ping() {
