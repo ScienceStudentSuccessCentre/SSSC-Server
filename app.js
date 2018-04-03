@@ -1,6 +1,7 @@
 //Copyright 2017, Avery Vine, All rights reserved.
 
 var express = require('express');
+var request = require('request');
 var app = express();
 
 const ROOT = "./public";

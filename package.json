@@ -1,14 +1,23 @@
 {
-  "name": "comp4601-sda-client",
+  "name": "sssc-app-server",
   "version": "1.0.0",
   "description": "",
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "Avery Vine and Maxim Kuzmenko",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AveryVine/ssscdb.git"
+  },
+  "author": "Avery Vine",
   "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/AveryVine/ssscdb/issues"
+  },
+  "homepage": "https://github.com/AveryVine/ssscdb#readme",
   "dependencies": {
-    "express": "^4.16.2"
+    "express": "^4.16.3",
+    "request": "^2.85.0"
   }
 }
