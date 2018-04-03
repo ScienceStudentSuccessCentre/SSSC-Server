@@ -1,0 +1,46 @@
+@import url(https://fonts.googleapis.com/css?family=Open+Sans);
+
+html,body {
+    height:100%;
+    width:100%;
+    margin:0;
+}
+
+body {
+    float: left;
+    background: #f2f2f2;
+    font-family: 'Open Sans', sans-serif;
+}
+
+h2 {
+    text-align: center;
+}
+
+
+
+#wrap {
+    width: 80%;
+    position: absolute;
+    top: 10%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+
+
+#table {
+  /* width: 40%;
+  left: 30%; */
+  margin: auto;
+  margin-top: 50px;
+  position: relative
+}
+
+#frame {
+  width: 90%;
+  height: 75%;
+  position: absolute;
+  transform: translate(5%, 0%);
+  top: 20%;
+  border:1px solid lightgrey;
+}
