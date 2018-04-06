@@ -46,7 +46,7 @@ app.listen(app.get('port'), function () {
 
 //run one scrape cycle on the SSSC website, then ping Heroku
 function cycle() {
-	$.scrape();
+	ssscdb.scrape();
 	ping();
 }
 
