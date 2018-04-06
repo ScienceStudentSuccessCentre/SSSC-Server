@@ -81,6 +81,6 @@ failedScrape = function(error, response, body) {
 
 global.getEvents = function() {
     console.log("Retrieving events...");
-    ssscdb.push({"name": "name", "url": "url", "year": "0", "month": "month", "day": "0", "description": "description", "time": "time", "location": "location", "imageUrl": "imageUrl"});
+    // ssscdb.push({"name": "name", "url": "url", "year": "0", "month": "month", "day": "0", "description": "description", "time": "time", "location": "location", "imageUrl": "imageUrl"});
     return JSON.stringify(ssscdb);
 }
