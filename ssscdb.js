@@ -72,10 +72,6 @@ printEvent = function(event) {
     console.log("\tImageURL: " + event.imageUrl);
 }
 
-jsonifyEvent = function(event) {
-
-}
-
 failedScrape = function(error, response, body) {
     console.log("Failed to scrape.");
     console.log('error:', error);
@@ -85,5 +81,6 @@ failedScrape = function(error, response, body) {
 
 global.getEvents = function() {
     console.log("Retrieving events...");
+    ssscdb.push({"name": "name", "url": "url", "date": "date", "description": "description", "time": "time", "location": "location", "imageUrl": "imageUrl"});
     return JSON.stringify(ssscdb);
 }
