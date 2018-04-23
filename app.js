@@ -52,7 +52,7 @@ function cycle() {
 
 //gets around the Heroku (hosting service) limit of 30 minutes of inactivity
 function ping() {
-	request('http://ssscdb.herokuapp.com', function (error, response, body) {
+	request('http://sssc-carleton-app-server.herokuapp.com', function (error, response, body) {
 		console.log('Pinged to keep dyno awake');
 	});
 }
