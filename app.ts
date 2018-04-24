@@ -1,10 +1,10 @@
 //Copyright 2017, Avery Vine, All rights reserved.
 
-var express = require('express');
-var request = require('request');
-var app = express();
+import express from 'express';
+import request from 'request';
+import * as ssscdb from './ssscdb.js';
 
-var ssscdb = require('./ssscdb.js');
+var app = express();
 
 const ROOT = "./public";
 

@@ -1,5 +1,7 @@
-class Event {
-    constructor(name, url, year, month, day) {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+var Event = /** @class */ (function () {
+    function Event(name, url, year, month, day) {
         this.name = name;
         this.url = url;
         this.year = year;
@@ -7,15 +9,13 @@ class Event {
         this.day = day;
         console.log("Created event: " + name + ", " + url + ", " + year + ", " + month + ", " + day);
     }
-
-    setDetails(description, time, location, imageUrl) {
+    Event.prototype.setDetails = function (description, time, location, imageUrl) {
         this.description = description;
         this.time = time;
         this.location = location;
-        this.url = url;
         this.imageUrl = imageUrl;
         console.log("Set details");
-    }
-}
-
-module.exports = Event;
+    };
+    return Event;
+}());
+exports.default = Event;
