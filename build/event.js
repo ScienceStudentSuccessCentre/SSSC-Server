@@ -16,6 +16,15 @@ var Event = /** @class */ (function () {
         this.imageUrl = imageUrl;
         console.log("Set details");
     };
+    Event.prototype.print = function () {
+        console.log("Event: " + this.name);
+        console.log("\tURL: " + this.url);
+        console.log("\tDate: " + this.month + " " + this.day + ", " + this.year);
+        console.log("\tDescription: " + this.description);
+        console.log("\tTime: " + this.time);
+        console.log("\tLocation: " + this.location);
+        console.log("\tImageURL: " + this.imageUrl);
+    };
     return Event;
 }());
 exports.default = Event;

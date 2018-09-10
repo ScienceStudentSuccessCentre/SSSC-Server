@@ -25,5 +25,8 @@
     "cheerio": "^1.0.0-rc.2",
     "express": "^4.16.3",
     "request": "^2.85.0"
+  },
+  "devDependencies": {
+    "tslint": "^5.11.0"
   }
 }

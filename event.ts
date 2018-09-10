@@ -1,13 +1,13 @@
 class Event {
-    public name: string;
-    public url: string;
-    public year: number;
-    public month: string;
-    public day: number;
-    public description?: string;
-    public time?: string;
-    public location?: string;
-    public imageUrl?: string;
+    private name: string;
+    private url: string;
+    private year: number;
+    private month: string;
+    private day: number;
+    private description?: string;
+    private time?: string;
+    private location?: string;
+    private imageUrl?: string;
 
     constructor(name: string, url: string, year: number, month: string, day: number) {
         this.name = name;
@@ -24,6 +24,16 @@ class Event {
         this.location = location;
         this.imageUrl = imageUrl;
         console.log("Set details");
+    }
+
+    print() {
+        console.log("Event: " + this.name);
+        console.log("\tURL: " + this.url);
+        console.log("\tDate: " + this.month + " " + this.day + ", " + this.year);
+        console.log("\tDescription: " + this.description);
+        console.log("\tTime: " + this.time);
+        console.log("\tLocation: " + this.location);
+        console.log("\tImageURL: " + this.imageUrl);
     }
 }
 

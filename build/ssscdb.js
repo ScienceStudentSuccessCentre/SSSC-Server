@@ -37,13 +37,21 @@ function parse(body) {
         var eventYear = Number(eventFullDate[eventFullDate.length - 1].trim());
         var eventMonth = element$('.event-cal-ico--month').text().trim();
         var eventDay = Number(element$('.event-cal-ico--day').text().trim());
+        var eventDescription = "";
+        var eventTime = "";
+        var eventLocation = "";
+        var eventImageUrl = "";
         event = new event_js_1.default(eventName, eventUrl, eventYear, eventMonth, eventDay);
-        request_1.default(baseURL + event.url, function (error, response, body) {
+        request_1.default(baseURL + eventUrl, function (error, response, body) {
             if (!error && response.statusCode == 200) {
                 var event$ = cheerio_1.default.load(body, {
                     normalizeWhitespace: true
                 });
-                event.description = event$('.event--description').text().trim();
+                var rawEventDescription$ = cheerio_1.default.load(event$('.event--description').html(), {
+                    normalizeWhitespace: true
+                });
+                eventImageUrl = rawEventDescription$('img').attr('src');
+                eventDescription = event$('.event--description').text().trim();
                 var eventDetails$ = cheerio_1.default.load(event$('.event--details').html(), {
                     normalizeWhitespace: true
                 });
@@ -51,16 +59,17 @@ function parse(body) {
                     var detail$ = cheerio_1.default.load(detail);
                     var eventDetail = detail$('.event-detail--content').text().trim();
                     if (detail$('.fa-clock-o').length > 0) {
-                        event.time = eventDetail;
+                        eventTime = eventDetail;
                     }
                     else if (detail$('.fa-reply').length > 0) {
                         //parse reply info
                     }
                     else if (detail$('.fa-map-marker').length > 0) {
-                        event.location = eventDetail;
+                        eventLocation = eventDetail;
                     }
                 });
-                printEvent(event);
+                event.setDetails(eventDescription, eventTime, eventLocation, eventImageUrl);
+                event.print();
                 ssscdb.push(event);
             }
             else {
@@ -68,15 +77,6 @@ function parse(body) {
             }
         });
     });
-}
-function printEvent(event) {
-    console.log("Event: " + event.name);
-    console.log("\tURL: " + event.url);
-    console.log("\tDate: " + event.month + " " + event.day + ", " + event.year);
-    console.log("\tDescription: " + event.description);
-    console.log("\tTime: " + event.time);
-    console.log("\tLocation: " + event.location);
-    console.log("\tImageURL: " + event.imageUrl);
 }
 function failedScrape(error, response, body) {
     console.log("Failed to scrape.");
@@ -88,7 +88,7 @@ function getEvents() {
     console.log("Retrieving events...");
     // ssscdb.push({"name": "name", "url": "url", "year": "0", "month": "month", "day": "0", "description": "description", "time": "time", "location": "location", "imageUrl": "imageUrl"});
     ssscdb.forEach(function (event) {
-        printEvent(event);
+        event.print();
     });
     return JSON.stringify(ssscdb);
 }

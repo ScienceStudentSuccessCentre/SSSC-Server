@@ -33,13 +33,21 @@ function parse(body: string) {
         let eventYear = Number(eventFullDate[eventFullDate.length - 1].trim());
         let eventMonth = element$('.event-cal-ico--month').text().trim();
         let eventDay = Number(element$('.event-cal-ico--day').text().trim());
+        let eventDescription = "";
+        let eventTime = "";
+        let eventLocation = "";
+        let eventImageUrl = "";
         event = new Event(eventName, eventUrl, eventYear, eventMonth, eventDay);
-        request(baseURL + event.url, function(error, response, body) {
+        request(baseURL + eventUrl, function(error, response, body) {
             if (!error && response.statusCode == 200) {
                 let event$ = cheerio.load(body, {
                     normalizeWhitespace: true
                 });
-                event.description = event$('.event--description').text().trim();
+                const rawEventDescription$ = cheerio.load((event$('.event--description').html() as string), {
+                    normalizeWhitespace: true
+                });
+                eventImageUrl = rawEventDescription$('img').attr('src');
+                eventDescription = event$('.event--description').text().trim();
                 const eventDetails$ = cheerio.load((event$('.event--details').html() as string), {
                     normalizeWhitespace: true
                 });
@@ -47,30 +55,21 @@ function parse(body: string) {
                     const detail$ = cheerio.load(detail);
                     var eventDetail = detail$('.event-detail--content').text().trim();
                     if (detail$('.fa-clock-o').length > 0) {
-                        event.time = eventDetail;
+                        eventTime = eventDetail;
                     } else if (detail$('.fa-reply').length > 0) {
                         //parse reply info
                     } else if (detail$('.fa-map-marker').length > 0) {
-                        event.location = eventDetail;
+                        eventLocation = eventDetail;
                     }
                 });
-                printEvent(event);
+                event.setDetails(eventDescription, eventTime, eventLocation, eventImageUrl);
+                event.print();
                 ssscdb.push(event);
             } else {
                 failedScrape(error, response, body);
             }
         });
     });
-}
-
-function printEvent(event: Event) {
-    console.log("Event: " + event.name);
-    console.log("\tURL: " + event.url);
-    console.log("\tDate: " + event.month + " " + event.day + ", " + event.year);
-    console.log("\tDescription: " + event.description);
-    console.log("\tTime: " + event.time);
-    console.log("\tLocation: " + event.location);
-    console.log("\tImageURL: " + event.imageUrl);
 }
 
 function failedScrape(error: string, response: request.Response, body: string) {
@@ -84,7 +83,7 @@ export function getEvents() {
     console.log("Retrieving events...");
     // ssscdb.push({"name": "name", "url": "url", "year": "0", "month": "month", "day": "0", "description": "description", "time": "time", "location": "location", "imageUrl": "imageUrl"});
     ssscdb.forEach(function(event) {
-        printEvent(event);
+        event.print();
     });
     return JSON.stringify(ssscdb);
 }
