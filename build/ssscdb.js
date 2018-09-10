@@ -51,6 +51,9 @@ function parse(body) {
                     normalizeWhitespace: true
                 });
                 eventImageUrl = rawEventDescription$('img').attr('src');
+                if (eventImageUrl) {
+                    eventImageUrl = baseURL + eventImageUrl;
+                }
                 eventDescription = event$('.event--description').text().trim();
                 var eventDetails$ = cheerio_1.default.load(event$('.event--details').html(), {
                     normalizeWhitespace: true
