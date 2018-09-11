@@ -31,7 +31,7 @@ function parse(body) {
         var event;
         console.log("Processing event: " + i);
         var element$ = cheerio_1.default.load(element);
-        var eventName = element$('.event-details--title').text();
+        var eventName = element$('.event-details--title').text().trim();
         var eventUrl = element$('a').first().attr('href');
         var eventFullDate = element$('.event-details--date').text().split(" ");
         var eventYear = Number(eventFullDate[eventFullDate.length - 1].trim());
@@ -54,11 +54,18 @@ function parse(body) {
                 if (eventImageUrl) {
                     eventImageUrl = baseURL + eventImageUrl;
                 }
-                eventDescription = event$('.event--description').text().trim();
+                var eventDescriptionHtml = event$('.event--description').html();
+                if (eventDescriptionHtml) {
+                    eventDescription = cheerio_1.default.load(eventDescriptionHtml.split('<a').join('{%a').split('</a>').join('{%/a%}'), {
+                        normalizeWhitespace: true
+                    }).root().text().split('{%a').join('<a').split('{%/a%}').join('</a>').trim();
+                }
+                // eventDescription = event$('.event--description').text().trim();
+                // eventDescription = event$('.event--description').text().replace(/<(?!a\s*\/?)[^>]+>/g, '').trim();
                 var eventDetails$ = cheerio_1.default.load(event$('.event--details').html(), {
                     normalizeWhitespace: true
                 });
-                eventDetails$('.row').each(function (j, detail) {
+                eventDetails$('.row').each(function (i, detail) {
                     var detail$ = cheerio_1.default.load(detail);
                     var eventDetail = detail$('.event-detail--content').text().trim();
                     if (detail$('.fa-clock-o').length > 0) {

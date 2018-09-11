@@ -27,7 +27,7 @@ function parse(body: string) {
         var event: Event;
         console.log("Processing event: " + i);
         let element$ = cheerio.load(element);
-        let eventName = element$('.event-details--title').text();
+        let eventName = element$('.event-details--title').text().trim();
         let eventUrl = element$('a').first().attr('href');
         var eventFullDate = element$('.event-details--date').text().split(" ");
         let eventYear = Number(eventFullDate[eventFullDate.length - 1].trim());
@@ -50,11 +50,16 @@ function parse(body: string) {
                 if (eventImageUrl) {
                     eventImageUrl = baseURL + eventImageUrl;
                 }
-                eventDescription = event$('.event--description').text().trim();
+                let eventDescriptionHtml = event$('.event--description').html();
+                if (eventDescriptionHtml) {
+                    eventDescription = cheerio.load(eventDescriptionHtml.split('<a').join('{%a').split('</a>').join('{%/a%}'), {
+                        normalizeWhitespace: true
+                    }).root().text().split('{%a').join('<a').split('{%/a%}').join('</a>').trim().split('\n').join('<br />');
+                }
                 const eventDetails$ = cheerio.load((event$('.event--details').html() as string), {
                     normalizeWhitespace: true
                 });
-                eventDetails$('.row').each(function(j, detail) {
+                eventDetails$('.row').each(function(i, detail) {
                     const detail$ = cheerio.load(detail);
                     var eventDetail = detail$('.event-detail--content').text().trim();
                     if (detail$('.fa-clock-o').length > 0) {
