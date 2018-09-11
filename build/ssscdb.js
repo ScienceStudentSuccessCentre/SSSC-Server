@@ -58,10 +58,8 @@ function parse(body) {
                 if (eventDescriptionHtml) {
                     eventDescription = cheerio_1.default.load(eventDescriptionHtml.split('<a').join('{%a').split('</a>').join('{%/a%}'), {
                         normalizeWhitespace: true
-                    }).root().text().split('{%a').join('<a').split('{%/a%}').join('</a>').trim();
+                    }).root().text().split('{%a').join('<a').split('{%/a%}').join('</a>').trim().split('\n').join('<br />');
                 }
-                // eventDescription = event$('.event--description').text().trim();
-                // eventDescription = event$('.event--description').text().replace(/<(?!a\s*\/?)[^>]+>/g, '').trim();
                 var eventDetails$ = cheerio_1.default.load(event$('.event--details').html(), {
                     normalizeWhitespace: true
                 });
