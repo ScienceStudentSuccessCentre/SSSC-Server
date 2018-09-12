@@ -9,11 +9,12 @@ var Event = /** @class */ (function () {
         this.day = day;
         console.log("Created event: " + name + ", " + url + ", " + year + ", " + month + ", " + day);
     }
-    Event.prototype.setDetails = function (description, time, location, imageUrl) {
+    Event.prototype.setDetails = function (description, time, location, imageUrl, actionUrl) {
         this.description = description;
         this.time = time;
         this.location = location;
         this.imageUrl = imageUrl;
+        this.actionUrl = actionUrl;
         console.log("Set details");
     };
     Event.prototype.print = function () {
@@ -24,6 +25,7 @@ var Event = /** @class */ (function () {
         console.log("\tTime: " + this.time);
         console.log("\tLocation: " + this.location);
         console.log("\tImageURL: " + this.imageUrl);
+        console.log("\tActionURL: " + this.actionUrl);
     };
     return Event;
 }());

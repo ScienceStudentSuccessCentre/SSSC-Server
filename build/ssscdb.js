@@ -41,6 +41,7 @@ function parse(body) {
         var eventTime = "";
         var eventLocation = "";
         var eventImageUrl = "";
+        var eventActionUrl = "";
         event = new event_js_1.default(eventName, eventUrl, eventYear, eventMonth, eventDay);
         request_1.default(baseURL + eventUrl, function (error, response, body) {
             if (!error && response.statusCode == 200) {
@@ -56,27 +57,29 @@ function parse(body) {
                 }
                 var eventDescriptionHtml = event$('.event--description').html();
                 if (eventDescriptionHtml) {
-                    eventDescription = cheerio_1.default.load(eventDescriptionHtml.split('<a').join('{%a').split('</a>').join('{%/a%}'), {
-                        normalizeWhitespace: true
-                    }).root().text().split('{%a').join('<a').split('{%/a%}').join('</a>').trim().split('\n').join('<br />');
+                    eventDescription = convertToHtmlText(eventDescriptionHtml);
                 }
                 var eventDetails$ = cheerio_1.default.load(event$('.event--details').html(), {
                     normalizeWhitespace: true
                 });
                 eventDetails$('.row').each(function (i, detail) {
                     var detail$ = cheerio_1.default.load(detail);
-                    var eventDetail = detail$('.event-detail--content').text().trim();
+                    var eventDetailRaw = detail$('.event-detail--content');
+                    var eventDetail = eventDetailRaw.text().trim();
+                    var eventDetailHtml = eventDetailRaw.html();
                     if (detail$('.fa-clock-o').length > 0) {
-                        eventTime = eventDetail;
+                        eventTime = detail$('.event-detail--content').text().trim();
                     }
                     else if (detail$('.fa-reply').length > 0) {
-                        //parse reply info
+                        if (eventDetailHtml) {
+                            eventActionUrl = convertToHtmlText(eventDetailHtml);
+                        }
                     }
                     else if (detail$('.fa-map-marker').length > 0) {
                         eventLocation = eventDetail;
                     }
                 });
-                event.setDetails(eventDescription, eventTime, eventLocation, eventImageUrl);
+                event.setDetails(eventDescription, eventTime, eventLocation, eventImageUrl, eventActionUrl);
                 event.print();
                 ssscdb.push(event);
             }
@@ -85,6 +88,11 @@ function parse(body) {
             }
         });
     });
+}
+function convertToHtmlText(html) {
+    return cheerio_1.default.load(html.split('<a').join('{%a').split('</a>').join('{%/a%}'), {
+        normalizeWhitespace: true
+    }).root().text().split('{%a').join('<a').split('{%/a%}').join('</a>').trim().split('\n').join('<br />');
 }
 function failedScrape(error, response, body) {
     console.log("Failed to scrape.");

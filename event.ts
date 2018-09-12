@@ -8,6 +8,7 @@ class Event {
     private time?: string;
     private location?: string;
     private imageUrl?: string;
+    private actionUrl?: string;
 
     constructor(name: string, url: string, year: number, month: string, day: number) {
         this.name = name;
@@ -18,11 +19,12 @@ class Event {
         console.log("Created event: " + name + ", " + url + ", " + year + ", " + month + ", " + day);
     }
 
-    setDetails(description: string, time: string, location: string, imageUrl: string) {
+    setDetails(description: string, time: string, location: string, imageUrl: string, actionUrl: string) {
         this.description = description;
         this.time = time;
         this.location = location;
         this.imageUrl = imageUrl;
+        this.actionUrl = actionUrl;
         console.log("Set details");
     }
 
@@ -34,6 +36,7 @@ class Event {
         console.log("\tTime: " + this.time);
         console.log("\tLocation: " + this.location);
         console.log("\tImageURL: " + this.imageUrl);
+        console.log("\tActionURL: " + this.actionUrl);
     }
 }
 
