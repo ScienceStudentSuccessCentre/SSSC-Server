@@ -83,14 +83,60 @@ function parse(body: string) {
     });
 }
 
-function convertToHtmlText(html: string) {
+function convertToHtmlText(html: string | null) {
+
+    // return cheerio.load(html.split('<a').join('{%a')
+    //                         .split('</a>').join('{%/a%}')
+    //                         .split('<ul').join('{%ul')
+    //                         .split('</ul>').join('{%/ul%}')
+    //                         .split('<ol').join('{%ol')
+    //                         .split('</ol>').join('{%/ol%}')
+    //                         .split('<li').join('{%li')
+    //                         .split('</li>').join('{%/li%}')), {
+    //                             normalizeWhitespace: true
+    //                         }).root().text().
+
+
     let whitelist = ['a', 'ul', 'ol', 'li'];
     whitelist.forEach(element => {
-        html = cheerio.load(html.split('<' + element).join('{%' + element).split('</' + element + '>').join('{%/' + element + '>'), {
-            normalizeWhitespace: true
-        }).root().text().split('{%' + element).join('<' + element).split('{%/' + element + '>').join('</' + element + '>');
+        if (html != null && html.indexOf('git') !== -1) {
+            console.log("Updating element: " + element);
+        }
+        if (html != null) {
+            html = cheerio.load(html.split('</' + element + '>')
+                                    .join('{%/' + element + '%}')
+                                    .split('<' + element)
+                                    .join('{%' + element), {
+                                        normalizeWhitespace: true
+                                    }).root().html();
+        }
+        if (html != null && html.indexOf('git') !== -1) {
+            console.log(html);
+        }
     });
-    return html.trim().split('\n').join('<br />');
+    if (html != null) {
+        html = cheerio.load(html, {
+            normalizeWhitespace: true
+        }).root().text().trim().split('\n').join('<br />');
+    }
+    whitelist.forEach(element => {
+        if (html != null && html.indexOf('git') !== -1) {
+            console.log("Reupdating element: " + element);
+        }
+        if (html != null) {
+            html = html.split('{%/' + element + '%}')
+                        .join('</' + element + '>')
+                        .split('{%' + element)
+                        .join('<' + element);
+        }
+        if (html != null && html.indexOf('git') !== -1) {
+            console.log(html);
+        }
+    });
+    if (html != null) {
+        return html.toString();
+    }
+    return "";
 }
 
 function failedScrape(error: string, response: request.Response, body: string) {
