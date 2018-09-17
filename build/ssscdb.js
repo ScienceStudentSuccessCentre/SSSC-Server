@@ -97,6 +97,10 @@ function convertToHtmlText(html) {
     var normalizeListElementsRegexReplacement2 = '</li>';
     var normalizeListElementsRegexReplace3 = /<br \/>\s*<li>/gi;
     var normalizeListElementsRegexReplacement3 = '<li>';
+    var normalizeListElementsRegexReplace4 = /<br \/><\/ul>/gi;
+    var normalizeListElementsRegexReplacement4 = '</ul>';
+    var normalizeListElementsRegexReplace5 = /<br \/><ul>/gi;
+    var normalizeListElementsRegexReplacement5 = '<ul>';
     if (html != null) {
         html = html.replace(normalizeListElementsRegexReplace1, normalizeListElementsRegexReplacement1);
         html = html.replace(normalizeListElementsRegexReplace2, normalizeListElementsRegexReplacement2);
@@ -129,7 +133,13 @@ function convertToHtmlText(html) {
         }
     });
     if (html != null) {
-        return html.trim().split('\n').join('<br />').replace(normalizeListElementsRegexReplace3, normalizeListElementsRegexReplacement3).toString();
+        return html.trim()
+            .split('\n')
+            .join('<br />')
+            .replace(normalizeListElementsRegexReplace3, normalizeListElementsRegexReplacement3)
+            .replace(normalizeListElementsRegexReplace4, normalizeListElementsRegexReplacement4)
+            .replace(normalizeListElementsRegexReplace5, normalizeListElementsRegexReplacement5)
+            .toString();
     }
     return "";
 }

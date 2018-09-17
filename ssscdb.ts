@@ -92,6 +92,10 @@ function convertToHtmlText(html: string | null) {
     let normalizeListElementsRegexReplacement2 = '</li>';
     let normalizeListElementsRegexReplace3 = /<br \/>\s*<li>/gi
     let normalizeListElementsRegexReplacement3 = '<li>';
+    let normalizeListElementsRegexReplace4 = /<br \/><\/ul>/gi
+    let normalizeListElementsRegexReplacement4 = '</ul>';
+    let normalizeListElementsRegexReplace5 = /<br \/><ul>/gi
+    let normalizeListElementsRegexReplacement5 = '<ul>';
 
     if (html != null) {
         html = html.replace(normalizeListElementsRegexReplace1, normalizeListElementsRegexReplacement1);
@@ -126,7 +130,13 @@ function convertToHtmlText(html: string | null) {
         }
     });
     if (html != null) {
-        return html.trim().split('\n').join('<br />').replace(normalizeListElementsRegexReplace3, normalizeListElementsRegexReplacement3).toString();
+        return html.trim()
+                    .split('\n')
+                    .join('<br />')
+                    .replace(normalizeListElementsRegexReplace3, normalizeListElementsRegexReplacement3)
+                    .replace(normalizeListElementsRegexReplace4, normalizeListElementsRegexReplacement4)
+                    .replace(normalizeListElementsRegexReplace5, normalizeListElementsRegexReplacement5)
+                    .toString();
     }
     return "";
 }
