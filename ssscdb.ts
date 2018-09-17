@@ -90,22 +90,22 @@ function convertToHtmlText(html: string | null) {
     let normalizeListElementsRegexReplacement1 = '<li>';
     let normalizeListElementsRegexReplace2 = /\s*<\/p>\s*<\/li>/gi;
     let normalizeListElementsRegexReplacement2 = '</li>';
+    let normalizeListElementsRegexReplace3 = /<br \/>\s*<li>/gi
+    let normalizeListElementsRegexReplacement3 = '<li>';
+
     if (html != null) {
         html = html.replace(normalizeListElementsRegexReplace1, normalizeListElementsRegexReplacement1);
         html = html.replace(normalizeListElementsRegexReplace2, normalizeListElementsRegexReplacement2);
     }
 
-    if (html !== null && html.indexOf('git') !== -1) {
-        console.log("HERE");
-        console.log(html);
-    }
-
     whitelist.forEach(element => {
         if (html != null) {
-            html = cheerio.load(html.split('</' + element + '>')
-                                    .join('{%/' + element + '%}')
+            html = cheerio.load(html.split('<' + element + '>')
+                                    .join('{%' + element + '%}')
                                     .split('<' + element)
-                                    .join('{%' + element), {
+                                    .join('{%' + element)
+                                    .split('</' + element + '>')
+                                    .join('{%/' + element + '%}'), {
                                         normalizeWhitespace: true
                                     }).root().html();
         }
@@ -113,18 +113,20 @@ function convertToHtmlText(html: string | null) {
     if (html != null) {
         html = cheerio.load(html, {
             normalizeWhitespace: true
-        }).root().text().trim().split('\n').join('<br />');
+        }).root().text();
     }
     whitelist.forEach(element => {
         if (html != null) {
-            html = html.split('{%/' + element + '%}')
-                        .join('</' + element + '>')
+            html = html.split('{%' + element + '%}')
+                        .join('<' + element + '>')
                         .split('{%' + element)
-                        .join('<' + element);
+                        .join('<' + element)
+                        .split('{%/' + element + '%}')
+                        .join('</' + element + '>');
         }
     });
     if (html != null) {
-        return html.toString();
+        return html.trim().split('\n').join('<br />').replace(normalizeListElementsRegexReplace3, normalizeListElementsRegexReplacement3).toString();
     }
     return "";
 }
