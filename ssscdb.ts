@@ -93,7 +93,7 @@ function convertToHtmlText(html: string | null) {
     let normalizeListElementsRegexReplace3 = /<br \/>\s*<li>/gi
     let normalizeListElementsRegexReplacement3 = '<li>';
     let normalizeListElementsRegexReplace4 = /<br \/><\/ul>/gi
-    let normalizeListElementsRegexReplacement4 = '</ul>';
+    let normalizeListElementsRegexReplacement4 = '</ul><br />';
     let normalizeListElementsRegexReplace5 = /<br \/><ul>/gi
     let normalizeListElementsRegexReplacement5 = '<ul>';
 

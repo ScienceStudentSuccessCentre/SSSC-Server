@@ -98,7 +98,7 @@ function convertToHtmlText(html) {
     var normalizeListElementsRegexReplace3 = /<br \/>\s*<li>/gi;
     var normalizeListElementsRegexReplacement3 = '<li>';
     var normalizeListElementsRegexReplace4 = /<br \/><\/ul>/gi;
-    var normalizeListElementsRegexReplacement4 = '</ul>';
+    var normalizeListElementsRegexReplacement4 = '</ul><br />';
     var normalizeListElementsRegexReplace5 = /<br \/><ul>/gi;
     var normalizeListElementsRegexReplacement5 = '<ul>';
     if (html != null) {
