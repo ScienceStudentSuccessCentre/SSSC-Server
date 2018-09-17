@@ -84,9 +84,13 @@ function parse(body: string) {
 }
 
 function convertToHtmlText(html: string) {
-    return cheerio.load(html.split('<a').join('{%a').split('</a>').join('{%/a%}'), {
-        normalizeWhitespace: true
-    }).root().text().split('{%a').join('<a').split('{%/a%}').join('</a>').trim().split('\n').join('<br />');
+    let whitelist = ['a', 'ul', 'ol', 'li'];
+    whitelist.forEach(element => {
+        html = cheerio.load(html.split('<' + element).join('{%' + element).split('</' + element + '>').join('{%/' + element + '>'), {
+            normalizeWhitespace: true
+        }).root().text().split('{%' + element).join('<' + element).split('{%/' + element + '>').join('</' + element + '>');
+    });
+    return html.trim().split('\n').join('<br />');
 }
 
 function failedScrape(error: string, response: request.Response, body: string) {

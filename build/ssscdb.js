@@ -90,9 +90,13 @@ function parse(body) {
     });
 }
 function convertToHtmlText(html) {
-    return cheerio_1.default.load(html.split('<a').join('{%a').split('</a>').join('{%/a%}'), {
-        normalizeWhitespace: true
-    }).root().text().split('{%a').join('<a').split('{%/a%}').join('</a>').trim().split('\n').join('<br />');
+    var whitelist = ['a', 'ul', 'ol', 'li'];
+    whitelist.forEach(function (element) {
+        html = cheerio_1.default.load(html.split('<' + element).join('{%' + element).split('</' + element + '>').join('{%/' + element + '>'), {
+            normalizeWhitespace: true
+        }).root().text().split('{%' + element).join('<' + element).split('{%/' + element + '>').join('</' + element + '>');
+    });
+    return html.trim().split('\n').join('<br />');
 }
 function failedScrape(error, response, body) {
     console.log("Failed to scrape.");
