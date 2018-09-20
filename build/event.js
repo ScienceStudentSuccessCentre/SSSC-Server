@@ -2,12 +2,13 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 var Event = /** @class */ (function () {
     function Event(name, url, year, month, day) {
+        this.id = url.replace("/node/", "");
         this.name = name;
         this.url = url;
         this.year = year;
         this.month = month;
         this.day = day;
-        console.log("Created event: " + name + ", " + url + ", " + year + ", " + month + ", " + day);
+        console.log("Created event: " + this.id + ", " + this.name + ", " + this.url + ", " + this.year + ", " + this.month + ", " + this.day);
     }
     Event.prototype.setDetails = function (description, time, location, imageUrl, actionUrl) {
         this.description = description;
@@ -19,6 +20,7 @@ var Event = /** @class */ (function () {
     };
     Event.prototype.print = function () {
         console.log("Event: " + this.name);
+        console.log("\tID: " + this.id);
         console.log("\tURL: " + this.url);
         console.log("\tDate: " + this.month + " " + this.day + ", " + this.year);
         console.log("\tDescription: " + this.description);

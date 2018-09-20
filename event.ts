@@ -1,4 +1,5 @@
 class Event {
+    private id: string;
     private name: string;
     private url: string;
     private year: number;
@@ -11,12 +12,13 @@ class Event {
     private actionUrl?: string;
 
     constructor(name: string, url: string, year: number, month: string, day: number) {
+        this.id = url.replace("/node/", "");
         this.name = name;
         this.url = url;
         this.year = year;
         this.month = month;
         this.day = day;
-        console.log("Created event: " + name + ", " + url + ", " + year + ", " + month + ", " + day);
+        console.log("Created event: " + this.id + ", " + this.name + ", " + this.url + ", " + this.year + ", " + this.month + ", " + this.day);
     }
 
     setDetails(description: string, time: string, location: string, imageUrl: string, actionUrl: string) {
@@ -30,6 +32,7 @@ class Event {
 
     print() {
         console.log("Event: " + this.name);
+        console.log("\tID: " + this.id);
         console.log("\tURL: " + this.url);
         console.log("\tDate: " + this.month + " " + this.day + ", " + this.year);
         console.log("\tDescription: " + this.description);
