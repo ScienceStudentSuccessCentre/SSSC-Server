@@ -2,7 +2,7 @@ class Event {
     private id: string;
     private name: string;
     private url: string;
-    private dateAndTime?: Date;
+    private dateTime?: Date;
     private description?: string;
     private rawTime?: string;
     private location?: string;
@@ -18,14 +18,14 @@ class Event {
 
     public setDetails(description: string, date: Date, time: string, location: string, imageUrl: string, actionUrl: string) {
         this.description = description;
-        this.dateAndTime = date;
+        this.dateTime = date;
         this.rawTime = time;
         this.location = location;
         this.imageUrl = imageUrl;
         this.actionUrl = actionUrl;
         console.log("Set details for event " + this.name + " (id " + this.id + ")");
 
-        if (this.dateAndTime && this.rawTime) {
+        if (this.dateTime && this.rawTime) {
             this.attemptToParseTime();
         }
     }
@@ -53,8 +53,8 @@ class Event {
                 hours += 12;
             }
 
-            this.dateAndTime!.setHours(hours);
-            this.dateAndTime!.setMinutes(minutes);
+            this.dateTime!.setHours(hours);
+            this.dateTime!.setMinutes(minutes);
             console.log("Set time for event " + this.name + " (id " + this.id + ")");
         }
     }
@@ -64,7 +64,7 @@ class Event {
         console.log("\tID: " + this.id);
         console.log("\tURL: " + this.url);
         console.log("\tDescription: " + this.description);
-        console.log("\tDate and Time: " + this.dateAndTime)
+        console.log("\tDate and Time: " + this.dateTime)
         console.log("\tRaw Time: " + this.rawTime);
         console.log("\tLocation: " + this.location);
         console.log("\tImageURL: " + this.imageUrl);
