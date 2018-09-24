@@ -1,4 +1,3 @@
-// const global = module.exports;
 import cheerio from 'cheerio';
 import request from 'request';
 import Event from './event.js';
