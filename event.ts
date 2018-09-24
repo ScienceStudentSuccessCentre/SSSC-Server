@@ -2,9 +2,9 @@ class Event {
     private id: string;
     private name: string;
     private url: string;
-    private date?: Date;
+    private dateAndTime?: Date;
     private description?: string;
-    private time?: string;
+    private rawTime?: string;
     private location?: string;
     private imageUrl?: string;
     private actionUrl?: string;
@@ -18,21 +18,21 @@ class Event {
 
     public setDetails(description: string, date: Date, time: string, location: string, imageUrl: string, actionUrl: string) {
         this.description = description;
-        this.date = date;
-        this.time = time;
+        this.dateAndTime = date;
+        this.rawTime = time;
         this.location = location;
         this.imageUrl = imageUrl;
         this.actionUrl = actionUrl;
         console.log("Set details for event " + this.name + " (id " + this.id + ")");
 
-        if (this.date && this.time) {
+        if (this.dateAndTime && this.rawTime) {
             this.attemptToParseTime();
         }
     }
 
     private attemptToParseTime() {
         let parseTimeRegex = /^(\d):?(\d{2})?\s*?([apmAPM]{2})/g;
-        let timeMatch = parseTimeRegex.exec(this.time!);
+        let timeMatch = parseTimeRegex.exec(this.rawTime!);
         if (timeMatch) {
             let hours = Number(timeMatch[1]);
             let minutes = Number(timeMatch[2]);
@@ -53,8 +53,8 @@ class Event {
                 hours += 12;
             }
 
-            this.date!.setHours(hours);
-            this.date!.setMinutes(minutes);
+            this.dateAndTime!.setHours(hours);
+            this.dateAndTime!.setMinutes(minutes);
             console.log("Set time for event " + this.name + " (id " + this.id + ")");
         }
     }
@@ -64,8 +64,8 @@ class Event {
         console.log("\tID: " + this.id);
         console.log("\tURL: " + this.url);
         console.log("\tDescription: " + this.description);
-        console.log("\tDate: " + this.date)
-        console.log("\tTime: " + this.time);
+        console.log("\tDate and Time: " + this.dateAndTime)
+        console.log("\tRaw Time: " + this.rawTime);
         console.log("\tLocation: " + this.location);
         console.log("\tImageURL: " + this.imageUrl);
         console.log("\tActionURL: " + this.actionUrl);
