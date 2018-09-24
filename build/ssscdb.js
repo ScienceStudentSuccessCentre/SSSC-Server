@@ -3,7 +3,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-// const global = module.exports;
 var cheerio_1 = __importDefault(require("cheerio"));
 var request_1 = __importDefault(require("request"));
 var event_js_1 = __importDefault(require("./event.js"));
