@@ -29,16 +29,13 @@ function parse(body: string) {
         let element$ = cheerio.load(element);
         let eventName = element$('.event-details--title').text().trim();
         let eventUrl = element$('a').first().attr('href');
-        var eventFullDate = element$('.event-details--date').text().split(" ");
-        let eventYear = Number(eventFullDate[eventFullDate.length - 1].trim());
-        let eventMonth = element$('.event-cal-ico--month').text().trim();
-        let eventDay = Number(element$('.event-cal-ico--day').text().trim());
         let eventDescription = "";
+        let eventDate = new Date();
         let eventTime = "";
         let eventLocation = "";
         let eventImageUrl = "";
         let eventActionUrl = "";
-        event = new Event(eventName, eventUrl, eventYear, eventMonth, eventDay);
+        event = new Event(eventName, eventUrl);
         request(baseURL + eventUrl, function(error, response, body) {
             if (!error && response.statusCode == 200) {
                 let event$ = cheerio.load(body, {
@@ -71,9 +68,12 @@ function parse(body: string) {
                         }
                     } else if (detail$('.fa-map-marker').length > 0) {
                         eventLocation = eventDetail;
+                    } else if (detail$('.fa-calendar').length > 0) {
+                        eventDate = new Date(Date.parse(eventDetailRaw.find('time').attr('datetime').replace('Z', '')))
                     }
                 });
-                event.setDetails(eventDescription, eventTime, eventLocation, eventImageUrl, eventActionUrl);
+                event.setDetails(eventDescription, eventDate, eventTime, eventLocation, eventImageUrl, eventActionUrl);
+
                 event.print();
                 ssscdb.push(event);
             } else {

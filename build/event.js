@@ -1,29 +1,57 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var Event = /** @class */ (function () {
-    function Event(name, url, year, month, day) {
+    function Event(name, url) {
         this.id = url.replace("/node/", "");
         this.name = name;
         this.url = url;
-        this.year = year;
-        this.month = month;
-        this.day = day;
-        console.log("Created event: " + this.id + ", " + this.name + ", " + this.url + ", " + this.year + ", " + this.month + ", " + this.day);
+        console.log("Created event " + this.name + " (id " + this.id + ")");
     }
-    Event.prototype.setDetails = function (description, time, location, imageUrl, actionUrl) {
+    Event.prototype.setDetails = function (description, date, time, location, imageUrl, actionUrl) {
         this.description = description;
+        this.date = date;
         this.time = time;
         this.location = location;
         this.imageUrl = imageUrl;
         this.actionUrl = actionUrl;
-        console.log("Set details");
+        console.log("Set details for event " + this.name + " (id " + this.id + ")");
+        if (this.date && this.time) {
+            this.attemptToParseTime();
+        }
+    };
+    Event.prototype.attemptToParseTime = function () {
+        var parseTimeRegex = /^(\d):?(\d{2})?\s*?([apmAPM]{2})/g;
+        var timeMatch = parseTimeRegex.exec(this.time);
+        if (timeMatch) {
+            var hours = Number(timeMatch[1]);
+            var minutes = Number(timeMatch[2]);
+            var period12Hours = timeMatch[3];
+            if (!hours) {
+                hours = 12;
+            }
+            if (!minutes) {
+                minutes = 0;
+            }
+            if (period12Hours) {
+                period12Hours = period12Hours.toLowerCase();
+            }
+            else {
+                period12Hours = "pm";
+            }
+            if (period12Hours.indexOf("pm") !== -1 && hours < 12) {
+                hours += 12;
+            }
+            this.date.setHours(hours);
+            this.date.setMinutes(minutes);
+            console.log("Set time for event " + this.name + " (id " + this.id + ")");
+        }
     };
     Event.prototype.print = function () {
         console.log("Event: " + this.name);
         console.log("\tID: " + this.id);
         console.log("\tURL: " + this.url);
-        console.log("\tDate: " + this.month + " " + this.day + ", " + this.year);
         console.log("\tDescription: " + this.description);
+        console.log("\tDate: " + this.date);
         console.log("\tTime: " + this.time);
         console.log("\tLocation: " + this.location);
         console.log("\tImageURL: " + this.imageUrl);
