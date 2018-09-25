@@ -9,13 +9,13 @@ var Event = /** @class */ (function () {
     }
     Event.prototype.setDetails = function (description, date, time, location, imageUrl, actionUrl) {
         this.description = description;
-        this.dateAndTime = date;
+        this.dateTime = date;
         this.rawTime = time;
         this.location = location;
         this.imageUrl = imageUrl;
         this.actionUrl = actionUrl;
         console.log("Set details for event " + this.name + " (id " + this.id + ")");
-        if (this.dateAndTime && this.rawTime) {
+        if (this.dateTime && this.rawTime) {
             this.attemptToParseTime();
         }
     };
@@ -41,8 +41,8 @@ var Event = /** @class */ (function () {
             if (period12Hours.indexOf("pm") !== -1 && hours < 12) {
                 hours += 12;
             }
-            this.dateAndTime.setHours(hours);
-            this.dateAndTime.setMinutes(minutes);
+            this.dateTime.setHours(hours);
+            this.dateTime.setMinutes(minutes);
             console.log("Set time for event " + this.name + " (id " + this.id + ")");
         }
     };
@@ -51,7 +51,7 @@ var Event = /** @class */ (function () {
         console.log("\tID: " + this.id);
         console.log("\tURL: " + this.url);
         console.log("\tDescription: " + this.description);
-        console.log("\tDate and Time: " + this.dateAndTime);
+        console.log("\tDate and Time: " + this.dateTime);
         console.log("\tRaw Time: " + this.rawTime);
         console.log("\tLocation: " + this.location);
         console.log("\tImageURL: " + this.imageUrl);
