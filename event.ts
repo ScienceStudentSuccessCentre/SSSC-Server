@@ -62,7 +62,7 @@ class Event {
 
     private correctTimeToUtc() {
         let easternDateTime = new Date(this.dateTime!.toLocaleString("en-US", {timeZone: "America/New_York"}));
-        let timezoneOffsetMillis = easternDateTime.getTime() - this.dateTime!.getTime()
+        let timezoneOffsetMillis = this.dateTime!.getTime() - easternDateTime.getTime();
         this.dateTime = new Date(this.dateTime!.getTime() + timezoneOffsetMillis);
     }
 

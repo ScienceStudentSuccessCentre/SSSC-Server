@@ -49,7 +49,7 @@ var Event = /** @class */ (function () {
     };
     Event.prototype.correctTimeToUtc = function () {
         var easternDateTime = new Date(this.dateTime.toLocaleString("en-US", { timeZone: "America/New_York" }));
-        var timezoneOffsetMillis = easternDateTime.getTime() - this.dateTime.getTime();
+        var timezoneOffsetMillis = this.dateTime.getTime() - easternDateTime.getTime();
         this.dateTime = new Date(this.dateTime.getTime() + timezoneOffsetMillis);
     };
     Event.prototype.print = function () {
