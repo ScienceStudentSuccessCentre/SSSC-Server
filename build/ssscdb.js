@@ -75,7 +75,7 @@ function parse(body) {
                         eventLocation = eventDetail;
                     }
                     else if (detail$('.fa-calendar').length > 0) {
-                        eventDate = new Date(Date.parse(eventDetailRaw.find('time').attr('datetime').replace('Z', '')));
+                        eventDate = new Date(Date.parse(eventDetailRaw.find('time').attr('datetime')));
                     }
                 });
                 event.setDetails(eventDescription, eventDate, eventTime, eventLocation, eventImageUrl, eventActionUrl);

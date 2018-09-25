@@ -68,7 +68,7 @@ function parse(body: string) {
                     } else if (detail$('.fa-map-marker').length > 0) {
                         eventLocation = eventDetail;
                     } else if (detail$('.fa-calendar').length > 0) {
-                        eventDate = new Date(Date.parse(eventDetailRaw.find('time').attr('datetime').replace('Z', '')))
+                        eventDate = new Date(Date.parse(eventDetailRaw.find('time').attr('datetime')))
                     }
                 });
                 event.setDetails(eventDescription, eventDate, eventTime, eventLocation, eventImageUrl, eventActionUrl);
