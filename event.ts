@@ -27,6 +27,7 @@ class Event {
 
         if (this.dateTime && this.rawTime) {
             this.attemptToParseTime();
+            this.correctTimeToUtc();
         }
     }
 
@@ -55,8 +56,14 @@ class Event {
 
             this.dateTime!.setHours(hours);
             this.dateTime!.setMinutes(minutes);
-            console.log("Set time for event " + this.name + " (id " + this.id + ")");
+            console.log("Set time to " + this.dateTime! + " for event " + this.name + " (id " + this.id + ")");
         }
+    }
+
+    private correctTimeToUtc() {
+        let easternDateTime = new Date(this.dateTime!.toLocaleString("en-US", {timeZone: "America/New_York"}));
+        let timezoneOffsetMillis = easternDateTime.getTime() - this.dateTime!.getTime()
+        this.dateTime = new Date(this.dateTime!.getTime() + timezoneOffsetMillis);
     }
 
     public print() {

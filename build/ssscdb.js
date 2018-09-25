@@ -76,9 +76,6 @@ function parse(body) {
                     }
                     else if (detail$('.fa-calendar').length > 0) {
                         eventDate = new Date(Date.parse(eventDetailRaw.find('time').attr('datetime')));
-                        eventDate.setUTCFullYear(eventDate.getFullYear(), eventDate.getMonth(), eventDate.getDate());
-                        eventDate.setUTCHours(eventDate.getHours());
-                        eventDate.setUTCMinutes(eventDate.getMinutes());
                     }
                 });
                 event.setDetails(eventDescription, eventDate, eventTime, eventLocation, eventImageUrl, eventActionUrl);

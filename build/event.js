@@ -17,6 +17,7 @@ var Event = /** @class */ (function () {
         console.log("Set details for event " + this.name + " (id " + this.id + ")");
         if (this.dateTime && this.rawTime) {
             this.attemptToParseTime();
+            this.correctTimeToUtc();
         }
     };
     Event.prototype.attemptToParseTime = function () {
@@ -43,8 +44,13 @@ var Event = /** @class */ (function () {
             }
             this.dateTime.setHours(hours);
             this.dateTime.setMinutes(minutes);
-            console.log("Set time for event " + this.name + " (id " + this.id + ")");
+            console.log("Set time to " + this.dateTime + " for event " + this.name + " (id " + this.id + ")");
         }
+    };
+    Event.prototype.correctTimeToUtc = function () {
+        var easternDateTime = new Date(this.dateTime.toLocaleString("en-US", { timeZone: "America/New_York" }));
+        var timezoneOffsetMillis = easternDateTime.getTime() - this.dateTime.getTime();
+        this.dateTime = new Date(this.dateTime.getTime() + timezoneOffsetMillis);
     };
     Event.prototype.print = function () {
         console.log("Event: " + this.name);
