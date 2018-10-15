@@ -68,7 +68,8 @@ function parse(body) {
                     }
                     else if (detail$('.fa-reply').length > 0) {
                         if (eventDetailHtml) {
-                            eventActionUrl = convertToHtmlText(eventDetailHtml);
+                            eventActionUrl = detail$('a').first().attr('href');
+                            // eventActionUrl = convertToHtmlText(eventDetailHtml);
                         }
                     }
                     else if (detail$('.fa-map-marker').length > 0) {
