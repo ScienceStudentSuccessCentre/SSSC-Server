@@ -1,9 +1,6 @@
-//Copyright 2017, Avery Vine, All rights reserved.
-
-import express from 'express';
-import request from 'request';
-import * as ssscdb from './ssscdb.js';
-
+var express = require('express');
+var request = require('request');
+var eventParser = require('./eventParser.js');
 var app = express();
 
 const ROOT = "./public";
@@ -17,14 +14,14 @@ app.use(function(req, res, next) {
 	next();
 });
 
-app.get('/events', function(req, res) {
-	res.send(ssscdb.getEvents());
+//send the home page
+app.get(['/', '/index.html', '/index'], function(req, res) {
+	res.sendFile("/index.html", {root: ROOT});
 });
 
-//render the home page
-app.get(['/', '/index.html', '/index'], function(req, res) {
-	res.sendFile('index.html', { root: ROOT });
-});
+app.get('/events',function(req,res){
+	res.send(eventParser.getEvents());
+})
 
 //send all other static files
 app.use(express.static(ROOT));
@@ -46,7 +43,7 @@ app.listen(app.get('port'), function () {
 
 //run one scrape cycle on the SSSC website, then ping Heroku
 function cycle() {
-	ssscdb.scrape();
+	eventParser.scrape();
 	ping();
 }
 

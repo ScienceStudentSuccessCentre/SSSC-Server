@@ -1,22 +1,12 @@
 class Event {
-    private id: string;
-    private name: string;
-    private url: string;
-    private dateTime?: Date;
-    private description?: string;
-    private rawTime?: string;
-    private location?: string;
-    private imageUrl?: string;
-    private actionUrl?: string;
-
-    constructor(name: string, url: string) {
+    constructor(name, url) {
         this.id = url.replace("/node/", "");
         this.name = name;
         this.url = url;
         console.log("Created event " + this.name + " (id " + this.id + ")");
     }
 
-    public setDetails(description: string, date: Date, time: string, location: string, imageUrl: string, actionUrl: string) {
+    setDetails(description, date, time, location, imageUrl, actionUrl) {
         this.description = description;
         this.dateTime = date;
         this.rawTime = time;
@@ -31,9 +21,9 @@ class Event {
         }
     }
 
-    private attemptToParseTime() {
+    attemptToParseTime() {
         let parseTimeRegex = /^(\d):?(\d{2})?\s*?([apmAPM]{2})/g;
-        let timeMatch = parseTimeRegex.exec(this.rawTime!);
+        let timeMatch = parseTimeRegex.exec(this.rawTime);
         if (timeMatch) {
             let hours = Number(timeMatch[1]);
             let minutes = Number(timeMatch[2]);
@@ -54,19 +44,19 @@ class Event {
                 hours += 12;
             }
 
-            this.dateTime!.setHours(hours);
-            this.dateTime!.setMinutes(minutes);
-            console.log("Set time to " + this.dateTime! + " for event " + this.name + " (id " + this.id + ")");
+            this.dateTime.setHours(hours);
+            this.dateTime.setMinutes(minutes);
+            console.log("Set time to " + this.dateTime + " for event " + this.name + " (id " + this.id + ")");
         }
     }
 
-    private correctTimeToUtc() {
-        let easternDateTime = new Date(this.dateTime!.toLocaleString("en-US", {timeZone: "America/New_York"}));
-        let timezoneOffsetMillis = this.dateTime!.getTime() - easternDateTime.getTime();
-        this.dateTime = new Date(this.dateTime!.getTime() + timezoneOffsetMillis);
+    correctTimeToUtc() {
+        let easternDateTime = new Date(this.dateTime.toLocaleString("en-US", {timeZone: "America/New_York"}));
+        let timezoneOffsetMillis = this.dateTime.getTime() - easternDateTime.getTime();
+        this.dateTime = new Date(this.dateTime.getTime() + timezoneOffsetMillis);
     }
 
-    public print() {
+    print() {
         console.log("Event: " + this.name);
         console.log("\tID: " + this.id);
         console.log("\tURL: " + this.url);
@@ -79,4 +69,4 @@ class Event {
     }
 }
 
-export default Event;
+module.exports = Event;

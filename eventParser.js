@@ -1,16 +1,16 @@
-import cheerio from 'cheerio';
-import request from 'request';
-import Event from './event.js';
+var cheerio = require('cheerio');
+var request = require('request');
+var Event = require('./event.js');
 
 const baseURL = "http://sssc.carleton.ca";
 const eventsURL = "/events";
-var ssscdb: Event[] = [];
+var events = [];
 
-export function scrape() {
+function scrape() {
     console.log("Scraping...");
-    request(baseURL + eventsURL, function (error: string, response: request.Response, body: string) {
+    request(baseURL + eventsURL, function (error, response, body) {
         if (!error && response.statusCode == 200) {
-            ssscdb = [];
+            events = [];
             parse(body);
         } else {
             failedScrape(error, response, body);
@@ -18,12 +18,12 @@ export function scrape() {
 	});
 }
 
-function parse(body: string) {
+function parse(body) {
     const events$ = cheerio.load(body, {
         normalizeWhitespace: true
     });
     events$('.event-listing--list-item').each(function(i, element) {
-        var event: Event;
+        var event;
         console.log("Processing event: " + i);
         let element$ = cheerio.load(element);
         let eventName = element$('.event-details--title').text().trim();
@@ -40,7 +40,7 @@ function parse(body: string) {
                 let event$ = cheerio.load(body, {
                     normalizeWhitespace: true
                 });
-                const rawEventDescription$ = cheerio.load((event$('.event--description').html() as string), {
+                const rawEventDescription$ = cheerio.load((event$('.event--description').html()), {
                     normalizeWhitespace: true
                 });
                 eventImageUrl = rawEventDescription$('img').attr('src');
@@ -51,7 +51,7 @@ function parse(body: string) {
                 if (eventDescriptionHtml) {
                     eventDescription = convertToHtmlText(eventDescriptionHtml);
                 }
-                const eventDetails$ = cheerio.load((event$('.event--details').html() as string), {
+                const eventDetails$ = cheerio.load((event$('.event--details').html()), {
                     normalizeWhitespace: true
                 });
                 eventDetails$('.row').each(function(i, detail) {
@@ -75,7 +75,7 @@ function parse(body: string) {
                 event.setDetails(eventDescription, eventDate, eventTime, eventLocation, eventImageUrl, eventActionUrl);
 
                 event.print();
-                ssscdb.push(event);
+                events.push(event);
             } else {
                 failedScrape(error, response, body);
             }
@@ -83,7 +83,7 @@ function parse(body: string) {
     });
 }
 
-function convertToHtmlText(html: string | null) {
+function convertToHtmlText(html) {
     let whitelist = ['a', 'ul', 'ol', 'li'];
 
     let normalizeListElementsRegexReplace1 = /<li>\s*<p>\s*/gi;
@@ -141,18 +141,20 @@ function convertToHtmlText(html: string | null) {
     return "";
 }
 
-function failedScrape(error: string, response: request.Response, body: string) {
+function failedScrape(error, response, body) {
     console.log("Failed to scrape.");
     console.log('error:', error);
     console.log('statusCode:', response && response.statusCode);
     console.log('body:', body);
 }
 
-export function getEvents() {
+function getEvents() {
     console.log("Retrieving events...");
-    // ssscdb.push({"name": "name", "url": "url", "year": "0", "month": "month", "day": "0", "description": "description", "time": "time", "location": "location", "imageUrl": "imageUrl"});
-    ssscdb.forEach(function(event) {
+    events.forEach(function(event) {
         event.print();
     });
-    return JSON.stringify(ssscdb);
+    return JSON.stringify(events);
 }
+
+module.exports.scrape = scrape;
+module.exports.getEvents = getEvents;
