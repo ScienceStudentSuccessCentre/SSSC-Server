@@ -14,7 +14,7 @@ If anything goes wrong in terms of how events are scraped and parsed from the we
 
 ## Setting up the project
 
-1. Clone the repository: https://github.com/ScienceStudentSuccessCentre/SSSC-iOS-App.git
+1. Clone the repository: https://github.com/ScienceStudentSuccessCentre/SSSC-Server.git
 2. Navigate into the directory
 3. Run `npm install`
 
