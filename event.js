@@ -6,6 +6,7 @@ class Event {
         console.log("Created event " + this.name + " (id " + this.id + ")");
     }
 
+    // sets basic event details
     setDetails(description, date, time, location, imageUrl, actionUrl) {
         this.description = description;
         this.dateTime = date;
@@ -16,12 +17,13 @@ class Event {
         console.log("Set details for event " + this.name + " (id " + this.id + ")");
 
         if (this.dateTime && this.rawTime) {
-            this.attemptToParseTime();
+            this.parseTime();
             this.correctTimeToUtc();
         }
     }
 
-    attemptToParseTime() {
+    // attempts to parse the event time into a Date object from a string
+    parseTime() {
         let parseTimeRegex = /^(\d):?(\d{2})?\s*?([apmAPM]{2})/g;
         let timeMatch = parseTimeRegex.exec(this.rawTime);
         if (timeMatch) {
@@ -50,12 +52,14 @@ class Event {
         }
     }
 
+    // shifts event times to the correct time zone
     correctTimeToUtc() {
         let easternDateTime = new Date(this.dateTime.toLocaleString("en-US", {timeZone: "America/New_York"}));
         let timezoneOffsetMillis = this.dateTime.getTime() - easternDateTime.getTime();
         this.dateTime = new Date(this.dateTime.getTime() + timezoneOffsetMillis);
     }
 
+    // prints event to the console
     print() {
         console.log("Event: " + this.name);
         console.log("\tID: " + this.id);

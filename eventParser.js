@@ -6,6 +6,7 @@ const baseURL = "http://sssc.carleton.ca";
 const eventsURL = "/events";
 var events = [];
 
+// gathers the HTML from the events page
 function scrape() {
     console.log("Scraping...");
     request(baseURL + eventsURL, function (error, response, body) {
@@ -18,6 +19,7 @@ function scrape() {
 	});
 }
 
+// parses a body of HTML to retrieve a list of events
 function parse(body) {
     const events$ = cheerio.load(body, {
         normalizeWhitespace: true
@@ -64,7 +66,6 @@ function parse(body) {
                     } else if (detail$('.fa-reply').length > 0) {
                         if (eventDetailHtml) {
                             eventActionUrl = detail$('a').first().attr('href');
-                            // eventActionUrl = convertToHtmlText(eventDetailHtml);
                         }
                     } else if (detail$('.fa-map-marker').length > 0) {
                         eventLocation = eventDetail;
@@ -83,6 +84,7 @@ function parse(body) {
     });
 }
 
+// strips out only certain HTML tags, so that things like lists and links are maintained in the apps
 function convertToHtmlText(html) {
     let whitelist = ['a', 'ul', 'ol', 'li'];
 
@@ -141,6 +143,7 @@ function convertToHtmlText(html) {
     return "";
 }
 
+// scraping went wrong (oh no)
 function failedScrape(error, response, body) {
     console.log("Failed to scrape.");
     console.log('error:', error);
@@ -148,6 +151,7 @@ function failedScrape(error, response, body) {
     console.log('body:', body);
 }
 
+// retrieves the list of events as JSON
 function getEvents() {
     console.log("Retrieving events...");
     events.forEach(function(event) {
