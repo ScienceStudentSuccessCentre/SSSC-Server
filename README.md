@@ -4,6 +4,7 @@ This is the server for the Carleton University Science Student Success Centre. Y
 
 - [Project summary](#project-summary)
 - [Setting up the project](#setting-up-the-project)
+- [Deploying changes](#deploying-changes)
 - [Brief overview of the internal workings](#brief-overview-of-the-internal-workings)
 
 ## Project summary
@@ -17,6 +18,10 @@ If anything goes wrong in terms of how events are scraped and parsed from the we
 1. Clone the repository: https://github.com/ScienceStudentSuccessCentre/SSSC-Server.git
 2. Navigate into the directory
 3. Run `npm install`
+
+## Deploying changes
+
+The project is currently hosted on [Heroku](https://www.heroku.com). It is synced up with the GitHub repository's `master` branch, such that any changes to the `master` branch are automatically deployed. **As such, always work and test on a separate branch, and only merge to `master` when you are confident nothing will be broken.** Once you've made any changes, you can simply merge your branch into the `master` branch, and the changes will go live.
 
 ## Brief overview of the internal workings
 
