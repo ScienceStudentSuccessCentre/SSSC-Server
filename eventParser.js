@@ -63,7 +63,7 @@ function parse(body) {
                     let eventDetailHtml = eventDetailRaw.html();
                     if (detail$('.fa-clock-o').length > 0) {
                         eventTime = detail$('.event-detail--content').text().trim();
-                    } else if (detail$('.fa-reply').length > 0) {
+                    } else if (detail$('.fa-leanpub').length > 0) {
                         if (eventDetailHtml) {
                             eventActionUrl = detail$('a').first().attr('href');
                         }
