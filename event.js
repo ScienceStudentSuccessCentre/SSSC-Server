@@ -24,7 +24,7 @@ class Event {
 
     // attempts to parse the event time into a Date object from a string
     parseTime() {
-        let parseTimeRegex = /^(\d):?(\d{2})?\s*?([apmAPM]{2})/g;
+        let parseTimeRegex = /^(\d):?(\d{2})?\s*?([apmAPM]{2})?/g;
         let timeMatch = parseTimeRegex.exec(this.rawTime);
         if (timeMatch) {
             let hours = Number(timeMatch[1]);
