@@ -1,6 +1,7 @@
 var express = require('express');
 var request = require('request');
 var eventParser = require('./eventParser.js');
+var mentorParser = require('./mentorParser.js');
 var app = express();
 
 const ROOT = "./public";
@@ -19,8 +20,12 @@ app.get(['/', '/index.html', '/index'], function(req, res) {
 	res.sendFile("/index.html", {root: ROOT});
 });
 
-app.get('/events',function(req,res){
+app.get('/events', function(req,res) {
 	res.send(eventParser.getEvents());
+})
+
+app.get('/mentors',function(req, res) {
+	res.send(mentorParser.getMentors());
 })
 
 //send all other static files
@@ -44,6 +49,7 @@ app.listen(app.get('port'), function () {
 //run one scrape cycle on the SSSC website, then ping Heroku
 function cycle() {
 	eventParser.scrape();
+	mentorParser.scrape();
 	ping();
 }
 
