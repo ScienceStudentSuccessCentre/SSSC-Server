@@ -1,82 +1,69 @@
 var cheerio = require('cheerio');
+var puppeteer = require('puppeteer');
 var request = require('request');
-var Event = require('./event.js');
+var Mentor = require('./mentor.js');
 
 const baseUrl = "http://sssc.carleton.ca";
-const eventsUrl = "/events";
-var events = [];
+const mentorsUrl = "/meet-our-mentors";
+var mentors = [];
 
-// gathers the HTML from the events page
+// gathers the HTML from the mentors page
+// this is done using puppeteer instead of request because mentors don't appear on the page immediately after loading
 function scrape() {
-    console.log("Scraping " + baseUrl + eventsUrl + "...");
-    request(baseUrl + eventsUrl, function (error, response, body) {
-        if (!error && response.statusCode == 200) {
-            events = [];
-            parse(body);
-        } else {
-            failedScrape(error, response, body);
-        }
-	});
+    console.log("Scraping " + baseUrl + mentorsUrl + "...");
+    puppeteer
+        .launch()
+        .then(browser => browser.newPage())
+        .then(page => {
+            return page.goto(baseUrl + mentorsUrl).then(function() {
+                return page.content();
+            });
+        })
+        .then(html => {
+            parse(html);
+        })
+        .catch(console.error)
 }
 
-// parses a body of HTML to retrieve a list of events
+// parses a body of HTML to retrieve a list of mentors
 function parse(body) {
-    const events$ = cheerio.load(body, {
+    const mentors$ = cheerio.load(body, {
         normalizeWhitespace: true
     });
-    events$('.event-listing--list-item').each(function(i, element) {
-        var event;
-        console.log("Processing event: " + i);
+    mentors$('.person--container').each(function(i, element) {
+        var mentor;
+        console.log("Processing mentor: " + i);
         let element$ = cheerio.load(element);
-        let eventName = element$('.event-details--title').text().trim();
-        let eventUrl = element$('a').first().attr('href');
-        let eventDescription = "";
-        let eventDate = new Date();
-        let eventTime = "";
-        let eventLocation = "";
-        let eventImageUrl = "";
-        let eventActionUrl = "";
-        event = new Event(eventName, eventUrl);
-        request(baseUrl + eventUrl, function(error, response, body) {
+        let mentorName = element$('.person--name').text().trim();
+        let mentorUrl = element$('a').first().attr('href');
+        let mentorDegree = "";
+        let mentorBio = "";
+        let mentorImageUrl = "";
+        let mentorTeam = "";
+        mentor = new Mentor(mentorName, mentorUrl);
+        request(mentorUrl, function(error, response, body) {
             if (!error && response.statusCode == 200) {
-                let event$ = cheerio.load(body, {
+                let mentor$ = cheerio.load(body, {
                     normalizeWhitespace: true
                 });
-                const rawEventDescription$ = cheerio.load((event$('.event--description').html()), {
+                const mentorProfile$ = cheerio.load((mentor$('.profile-full').html()), {
                     normalizeWhitespace: true
                 });
-                eventImageUrl = rawEventDescription$('img').attr('src');
-                if (eventImageUrl) {
-                    eventImageUrl = baseUrl + eventImageUrl;
+                mentorDegree = mentorProfile$('.profile--degreeprogram').text()
+                mentorBioHtml = mentorProfile$('.profile--bio div').html();
+                if (mentorBioHtml) {
+                    mentorBio = convertToHtmlText(mentorBioHtml);
                 }
-                let eventDescriptionHtml = event$('.event--description').html();
-                if (eventDescriptionHtml) {
-                    eventDescription = convertToHtmlText(eventDescriptionHtml);
+                mentorImageUrl = mentorProfile$('img').attr('src');
+                if (mentorImageUrl) {
+                    mentorImageUrl = baseUrl + mentorImageUrl;
                 }
-                const eventDetails$ = cheerio.load((event$('.event--details').html()), {
-                    normalizeWhitespace: true
-                });
-                eventDetails$('.row').each(function(i, detail) {
-                    const detail$ = cheerio.load(detail);
-                    let eventDetailRaw = detail$('.event-detail--content');
-                    let eventDetail = eventDetailRaw.text().trim();
-                    let eventDetailHtml = eventDetailRaw.html();
-                    if (detail$('.fa-clock-o').length > 0) {
-                        eventTime = detail$('.event-detail--content').text().trim();
-                    } else if (detail$('.fa-leanpub').length > 0) {
-                        if (eventDetailHtml) {
-                            eventActionUrl = detail$('a').first().attr('href');
-                        }
-                    } else if (detail$('.fa-map-marker').length > 0) {
-                        eventLocation = eventDetail;
-                    } else if (detail$('.fa-calendar').length > 0) {
-                        eventDate = new Date(Date.parse(eventDetailRaw.find('time').attr('datetime')))
-                    }
-                });
-                event.setDetails(eventDescription, eventDate, eventTime, eventLocation, eventImageUrl, eventActionUrl);
+                mentorTeam = mentorProfile$('.taxonomy-tags').text()
 
-                event.print();
-                events.push(event);
+                mentor.setDetails(mentorDegree, mentorBio, mentorImageUrl, mentorTeam);
+
+                mentor.print();
+                mentors.push(mentor);
             } else {
                 failedScrape(error, response, body);
             }
@@ -145,20 +132,20 @@ function convertToHtmlText(html) {
 
 // scraping went wrong (oh no)
 function failedScrape(error, response, body) {
-    console.log("Failed to scrape events.");
+    console.log("Failed to scrape mentors.");
     console.log('error:', error);
     console.log('statusCode:', response && response.statusCode);
     console.log('body:', body);
 }
 
-// retrieves the list of events as JSON
-function getEvents() {
-    console.log("Retrieving events...");
-    events.forEach(function(event) {
-        event.print();
+// retrieves the list of mentors as JSON
+function getMentors() {
+    console.log("Retrieving mentors...");
+    mentors.forEach(function(mentor) {
+        mentor.print();
     });
-    return JSON.stringify(events);
+    return JSON.stringify(mentors);
 }
 
 module.exports.scrape = scrape;
-module.exports.getEvents = getEvents;
+module.exports.getMentors = getMentors;
