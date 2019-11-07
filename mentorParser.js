@@ -12,7 +12,7 @@ var mentors = [];
 function scrape() {
     console.log("Scraping " + baseUrl + mentorsUrl + "...");
     puppeteer
-        .launch()
+        .launch({args: ['--no-sandbox', '--disable-setuid-sandbox']})
         .then(browser => browser.newPage())
         .then(page => {
             return page.goto(baseUrl + mentorsUrl).then(function() {
