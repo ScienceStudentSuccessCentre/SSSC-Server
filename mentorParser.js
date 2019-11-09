@@ -20,6 +20,7 @@ function scrape() {
             });
         })
         .then(html => {
+            mentors = [];
             parse(html);
         })
         .catch(console.error)
