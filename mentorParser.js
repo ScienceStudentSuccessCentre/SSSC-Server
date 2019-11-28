@@ -11,23 +11,24 @@ var mentors = [];
 // this is done using puppeteer instead of request because mentors don't appear on the page immediately after loading
 function scrape() {
     console.log("Scraping " + baseUrl + mentorsUrl + "...");
-    puppeteer
-        .launch({args: ['--no-sandbox', '--disable-setuid-sandbox']})
-        .then(browser => browser.newPage())
-        .then(page => {
-            return page.goto(baseUrl + mentorsUrl).then(function() {
-                return page.content();
-            });
-        })
-        .then(html => {
-            mentors = [];
-            parse(html);
-        })
-        .catch(console.error)
+    (async() => {
+        const browser = await puppeteer.launch({args:['--no-sandbox', '--disable-setuid-sandbox']});
+        try {
+            const page = await browser.newPage();
+            await page.goto(baseUrl + mentorsUrl);
+            const content = await page.content();
+            parse(content);
+        } catch (error) {
+            console.log(error);
+        } finally {
+            await browser.close();
+        }
+    })();
 }
 
 // parses a body of HTML to retrieve a list of mentors
 function parse(body) {
+    mentors = [];
     const mentors$ = cheerio.load(body, {
         normalizeWhitespace: true
     });
