@@ -24,8 +24,12 @@ app.get('/events', function(req,res) {
 	res.send(eventParser.getEvents());
 })
 
-app.get('/mentors',function(req, res) {
+app.get('/mentors', function(req, res) {
 	res.send(mentorParser.getMentors());
+})
+
+app.get('/features', function(req, res) {
+	res.sendFile("features.json", { root: ROOT });
 })
 
 //send all other static files
