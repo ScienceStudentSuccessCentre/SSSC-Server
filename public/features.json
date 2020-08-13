@@ -1,3 +1,4 @@
 {
-    "enableEmailEventRegistration": true
+    "enableEmailEventRegistration": true,
+    "enableEmailMentorRegistration": true
 }
