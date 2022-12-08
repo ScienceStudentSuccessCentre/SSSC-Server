@@ -19,7 +19,7 @@
   "homepage": "https://github.com/ScienceStudentSuccessCentre/ssscdb#readme",
   "dependencies": {
     "cheerio": "^1.0.0-rc.2",
-    "express": "^4.16.3",
+    "express": "^4.17.3",
     "puppeteer": "^2.0.0",
     "request": "^2.85.0"
   }
